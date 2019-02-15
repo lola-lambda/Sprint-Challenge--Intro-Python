@@ -36,8 +36,8 @@ def cityreader(cities=[]):
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
-for c in cities:
-    print(c)
+# for c in cities:
+#     print(c)
 
 # STRETCH GOAL!
 #
@@ -68,14 +68,38 @@ for c in cities:
 # Tucson: (32.1558,-110.8777)
 # Salt Lake City: (40.7774,-111.9301)
 
-# TODO Get latitude and longitude values from the user
+# Get latitude and longitude values from the user
+# coordinates = input("Enter two pairs of coordinates with the first representing the upper left corner of the search region, and the second representing the bottom right: ")
+
+def f(pt):
+	return float('{0:.4f}'.format(float(pt)))
+
+def check_inputs(input):
+	points = input.split()
+	for point in points:
+		try:
+			f(point)
+		except ValueError:
+			return 'invalid'
+	if f(points[0]) > f(points[2]) and f(points[1]) < f(points[3]):
+		return 'UL/BR'
+	if f(points[0]) < f(points[2]) and f(points[1]) > f(points[3]):
+		return 'UR/BL'
+	else:
+		return 'invalid'
+
+# print(check_inputs(coordinates))
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
-  # within will hold the cities that fall within the specified region
-  	within = []
+	res = check_inputs(f"{lat1} {lon1} {lat2} {lon2}")
+	cities = cityreader()
+	within = []
+	if res == 'UL/BR':
+		within = [city for city in cities if city.lat <= lat1 and city.lat >= lat2 and city.lon >= lon1 and city.lon <= lon2]
+	elif res == 'UR/BL':
+		within = [city for city in cities if city.lat >= lat1 and city.lat <= lat2 and city.lon <= lon1 and city.lon >= lon2]
+	elif res == 'invalid':
+		return 'Invalid set of coordinates'	
+	return within
 
-  # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
-
-  	return within
+print(cityreader_stretch(37.7561, -122.4429, 27.9937, -82.4454))
