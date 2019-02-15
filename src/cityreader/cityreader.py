@@ -69,6 +69,7 @@ cityreader(cities)
 # Salt Lake City: (40.7774,-111.9301)
 
 # Get latitude and longitude values from the user
+
 # coordinates = input("Enter two pairs of coordinates with the first representing the upper left corner of the search region, and the second representing the bottom right: ")
 
 def f(pt):
@@ -81,9 +82,9 @@ def check_inputs(input):
 			f(point)
 		except ValueError:
 			return 'invalid'
-	if f(points[0]) > f(points[2]) and f(points[1]) < f(points[3]):
+	if f(points[0]) < f(points[2]) and f(points[1]) < f(points[3]):
 		return 'UL/BR'
-	if f(points[0]) < f(points[2]) and f(points[1]) > f(points[3]):
+	if f(points[0]) > f(points[2]) and f(points[1]) > f(points[3]):
 		return 'UR/BL'
 	else:
 		return 'invalid'
@@ -92,14 +93,15 @@ def check_inputs(input):
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
 	res = check_inputs(f"{lat1} {lon1} {lat2} {lon2}")
-	cities = cityreader()
 	within = []
 	if res == 'UL/BR':
-		within = [city for city in cities if city.lat <= lat1 and city.lat >= lat2 and city.lon >= lon1 and city.lon <= lon2]
+		print('ulbr')
+		within = [city for city in cities if city.lat >= lat1 and city.lat <= lat2 and city.lon >= lon1 and city.lon <= lon2]
 	elif res == 'UR/BL':
-		within = [city for city in cities if city.lat >= lat1 and city.lat <= lat2 and city.lon <= lon1 and city.lon >= lon2]
+		print('urbl')
+		within = [city for city in cities if city.lat <= lat1 and city.lat >= lat2 and city.lon <= lon1 and city.lon >= lon2]
 	elif res == 'invalid':
 		return 'Invalid set of coordinates'	
 	return within
 
-print(cityreader_stretch(37.7561, -122.4429, 27.9937, -82.4454))
+print(cityreader_stretch(32, -120, 45, -100))
